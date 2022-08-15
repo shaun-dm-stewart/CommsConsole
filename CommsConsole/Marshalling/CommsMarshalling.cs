@@ -13,6 +13,7 @@ namespace CommsConsole.Marshalling
     public class CommsMarshalling : ICommsMarshalling
     {
         private readonly Exclusions _exclusions;
+        private readonly SymbolicPorts _symbolicPorts;
 
         // Network related fields
         INetworkService _networkService;
@@ -24,15 +25,22 @@ namespace CommsConsole.Marshalling
 
         public CommsMarshalling(
             IOptions<Exclusions> exclusions
+            , IOptions<SymbolicPorts> symbolicLinks
             , INetworkService networkService)
         {
             _exclusions = exclusions.Value;
+            _symbolicPorts = symbolicLinks.Value;
             _networkService = networkService;
         }
 
         public List<string> EnumeratePorts()
         {
-            return _networkService.PortList().Except(_exclusions.Ports).ToList();
+            var ports = _networkService.PortList().Except(_exclusions.Ports).ToList();
+            if(_symbolicPorts.Ports.Count > 0)
+            {
+                ports.AddRange(_symbolicPorts.Ports);
+            }
+            return ports;
         }
 
         public bool OpenPort(string portName, int thisNodeAddress, MarshallingNetworkRxd marshallingNetworkRxd, MarshallingNetworkTxd marshallingNetworkTxd)

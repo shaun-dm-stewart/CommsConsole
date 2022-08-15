@@ -52,6 +52,7 @@ namespace CommsConsole
             services.Configure<RadioSettings>(Configuration.GetSection(nameof(RadioSettings)));
             services.Configure<NetworkSettings>(Configuration.GetSection(nameof(NetworkSettings)));
             services.Configure<Exclusions>(Configuration.GetSection(nameof(Exclusions)));
+            services.Configure<SymbolicPorts>(Configuration.GetSection(nameof(SymbolicPorts)));
             services.AddSingleton<MainWindow>();
             services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
             services.AddSingleton<INetworkService, NetworkService>();
